@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Minigame Web Component</title>
+    <script type="module" src="./MiniGame.js"></script>
+</head>
+<style>
+* {
+  box-sizing: border-box;
+}
+html, body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+}
+.page {
+  width: 100%;
+  max-width: 960px;
+  margin: 50px auto;
+}
+</style>
+
+
+<template id="mini-game-template">
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      :host {
+        --cell-size: 48px;
+        --grid-gap-size: 5px;
+        --cols: 4;
+        --width: calc(calc(var(--cell-size) * var(--cols)) + calc(var(--cols) * var(--grid-gap-size)));
+      }
+      .mini-game {
+        width: 100%;
+        display: block;
+        margin: 0 auto;
+        padding: 1em;
+        border: 4px solid #c0c0c0;
+      }
+      .mini-game-body {
+        max-width: var(--width);
+        display: grid;
+        grid-gap: var(--grid-gap-size);
+        grid-template-columns: repeat(auto-fill, var(--cell-size));
+      }
+      .cell {
+        width: var(--cell-size);
+        height: var(--cell-size);
+        border: 1px solid #CCC;
+        background-color: #EEE;
+        font-size: 30px;
+        font-weight: bold;
+        text-align: center;
+        line-height: var(--cell-size);
+        border-radius: 4px;
+        box-shadow: inset 5px 5px 10px #FFF, inset -3px -3px 5px #777;
+        cursor: pointer;
+        transition-property: background-color, box-shadow;
+        transition-duration: 500ms;
+        transition-timing-function: ease-out;
+      }
+      .cell.revealed {
+        background-color: #DDD;
+        text-shadow: #666 0 0 2px;
+        box-shadow: inset 4px 4px 4px #bbb;
+      }
+      .cell.adj-0 {
+        content: '';
+      }
+      .cell.adj-1 {
+        color: steelblue;
+      }
+      .cell.adj-2 {
+        color: red;
+      }
+      .cell.adj-3 {
+        color: yellow;
+      }
+      .cell.adj-4 {
+        color: purple;
+      }
+      .cell.adj-5 {
+        color: grey;
+      }
+    </style>
+    <div class="mini-game">
+        <h3><slot name="title">Minigame</slot></h3>
+        <div class="mini-game-header">
+            <slot name="header"></slot>
+            <span class="items-found">Items found: 0</span>
+            <span class="steps-available">Steps: 0</span>
+        </div>
+        <div class="mini-game-body" slot="body"></div>
+    </div>
+</template>
+
+
+
+
+<body>
+    <div class="page">
+        <mini-game cols="11" rows="7" items="12" steps="14"></mini-game>
+    </div>
+</body>
+</html>
