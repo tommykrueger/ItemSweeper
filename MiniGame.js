@@ -21,15 +21,12 @@ export default class MiniGame extends HTMLElement {
 
         this.grid = [];
 
-        this.placedItems = [];
-
         this.itemsAssigned = 0;
 
         // how many items did the player already found
         this.itemsFound = 0;
 
         this.availableSteps = 0;
-
 
         this.template = document.querySelector('#mini-game-template')
         this.templateInstance = this.template.content.cloneNode(true);
@@ -54,15 +51,54 @@ export default class MiniGame extends HTMLElement {
      * This function is always called once the html tag is loaded into the DOM.
      */
     connectedCallback() {
-        // this.loadData();
+        this.startGame();
+    }
 
-        console.log(this.attr);
+    startGame() {
+        this.reset();
         this.initGridCells();
         this.placeItems();
         this.render();
         this.updateUI();
 
         document.querySelector('mini-game').style.setProperty("--cols", this.attr.cols);
+    }
+
+    reset() {
+        this.grid = [];
+        this.itemsAssigned = 0;
+        this.itemsFound = 0;
+        this.availableSteps = this.attr.steps;
+    }
+
+    render() {
+        this.shadowRoot.appendChild(this.templateInstance);
+
+        this.modalSlot = this.getSlot('modal');
+        this.body = this.getSlot('body');
+        this.body.innerHTML = '';
+
+        for (let r = 0; r < this.attr.rows; r++) {
+            for (let c = 0; c < this.attr.cols; c++) {
+                let cellObj = this.grid[r][c];
+                let cell = document.createElement('div');
+                cell.classList.add('cell');
+
+                if (cellObj.isRevealed) {
+                    cell.classList.add('revealed');
+                    cell.classList.add(`adj-${cellObj.value}`);
+                }
+
+                cell.setAttribute('data-xpos', c);
+                cell.setAttribute('data-ypos', r);
+                // cell.innerHTML = cellObj.value;
+
+                this.body.appendChild(cell);
+                this.addClickHandler(cell);
+            }
+        }
+
+        this.availableSteps = parseInt(this.attr.steps);
     }
 
     /**
@@ -93,7 +129,6 @@ export default class MiniGame extends HTMLElement {
                 cell.value = "ITEM";
                 this.itemsAssigned++;
             }
-            console.log(cell);
         }
 
         for (let r = 0; r < this.attr.rows; r++) {
@@ -132,9 +167,8 @@ export default class MiniGame extends HTMLElement {
         return results;
     }
 
-    //reveal a cell
     revealCell(cell) {
-        if (!cell.isRevealed && !cell.isFlagged) {
+        if (!cell.isRevealed) {
             const cellElement = cell.getElement(this.body);
 
             cell.isRevealed = true;
@@ -147,7 +181,7 @@ export default class MiniGame extends HTMLElement {
             } else if (cell.value === 0) {
                 //if the clicked cell has 0 adjacent mines, we need to recurse to clear out all adjacent 0 cells
                 const adjCells = this.getAdjacentCells(cell.ypos, cell.xpos);
-                for (let i = 0, len = adjCells.length; i < len; i++) {
+                for (let i=0, len=adjCells.length; i<len; i++) {
                     this.revealCell(adjCells[i]);
                 }
             }
@@ -155,44 +189,15 @@ export default class MiniGame extends HTMLElement {
     }
 
     updateUI() {
-        this.shadowRoot.querySelector('.items-found').innerHTML = `${this.itemsFound}/${this.attr.items}`;
-        this.shadowRoot.querySelector('.steps-available').innerHTML = `${this.availableSteps}`;
+        this.shadowRoot.querySelector('.items-found').innerHTML = `Items found: ${this.itemsFound}/${this.attr.items}`;
+        this.shadowRoot.querySelector('.steps-available').innerHTML = `Steps: ${this.availableSteps}`;
     }
 
-    render() {
-        this.header = this.getSlot('header');
-        this.body = this.getSlot('body');
 
-        for (let r = 0; r < this.attr.rows; r++) {
-            for (let c = 0; c < this.attr.cols; c++) {
-                let cellObj = this.grid[r][c];
-                let cell = document.createElement('div');
-                cell.classList.add('cell');
-
-                if (cellObj.isFlagged) {
-                    cell.classList.add('flagged');
-                } else if (cellObj.isRevealed) {
-                    cell.classList.add('revealed');
-                    cell.classList.add(`adj-${cellObj.value}`);
-                }
-
-                cell.setAttribute('data-xpos', c);
-                cell.setAttribute('data-ypos', r);
-                // cell.innerHTML = cellObj.value;
-
-                this.body.appendChild(cell);
-                this.addClickHandler(cell);
-            }
-        }
-
-        this.shadowRoot.appendChild(this.templateInstance);
-        this.availableSteps = parseInt(this.attr.steps);
-    }
 
     addClickHandler(cell) {
         cell.addEventListener("click", (e) => {
             const target = e.target;
-            console.log(target);
 
             if (target.classList.contains("cell")) {
                 const cell =
@@ -201,11 +206,8 @@ export default class MiniGame extends HTMLElement {
                         [target.getAttribute("data-xpos")];
 
                 if (!cell.isRevealed) {
-                    // this.stepsMade++;
-                    //document.getElementById("moves_made").textContent = game.movesMade;
                     this.availableSteps--;
                     this.revealCell(cell);
-                    // game.save();
                 }
 
                 this.updateUI();
@@ -216,19 +218,36 @@ export default class MiniGame extends HTMLElement {
 
     checkGameOver() {
         if (this.availableSteps === 0) {
-            alert(`Game Over`);
-            // show game over screen
+            this.showModal({
+                message: 'Game Over',
+                items_found: this.itemsFound
+            });
         }
 
         if (parseInt(this.attr.items) === this.itemsFound) {
-            alert('You Win');
-            // show You win screen
+            this.showModal({
+                message: 'You Win!',
+                items_found: this.itemsFound
+            });
         }
     }
 
+    showModal(text) {
+        this.modalSlot.innerHTML = `
+            <h3>${text.message}</h3>
+            <p>You found ${text.items_found} of ${this.attr.items} items</p>
+            <button id="restart-btn">Restart</button>
+        `;
+        this.modalSlot.style.display = 'flex';
+
+        this.modalSlot.querySelector('#restart-btn').addEventListener('click', () => {
+           this.startGame();
+            this.modalSlot.style.display = 'none';
+        });
+    }
 
     getSlot (slotName) {
-        return this.templateInstance.querySelector(`[slot=${slotName}]`);
+        return this.shadowRoot.querySelector(`[slot=${slotName}]`);
     }
 }
 

@@ -6,15 +6,13 @@ export default class Cell {
         value = 0,
         isItem = false,
         isRevealed = false,
-        isFlagged = false
     }) {
         Object.assign(this, {
             xpos,
             ypos,
-            value, //value of a cell: number of adjacent mines, F for flagged, M for mine
+            value,
             isItem,
             isRevealed,
-            isFlagged
         });
     }
 
