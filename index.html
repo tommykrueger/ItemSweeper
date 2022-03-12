@@ -45,14 +45,20 @@ p {
 
 <template id="mini-game-template">
     <style>
-      * {
-        box-sizing: border-box;
-      }
       :host {
         --cell-size: 48px;
         --grid-gap-size: 5px;
         --cols: 4;
         --width: calc(calc(var(--cell-size) * var(--cols)) + calc(var(--cols) * var(--grid-gap-size)));
+
+        --color1: steelblue;
+        --color2: red;
+        --color3: yellow;
+        --color4: purple;
+        --color5: green;
+      }
+      * {
+        box-sizing: border-box;
       }
       .mini-game {
         width: 100%;
@@ -106,19 +112,19 @@ p {
         content: '';
       }
       .cell.adj-1 {
-        color: steelblue;
+        color: var(--color1);
       }
       .cell.adj-2 {
-        color: red;
+        color: var(--color2);
       }
       .cell.adj-3 {
-        color: yellow;
+        color: var(--color3);
       }
       .cell.adj-4 {
-        color: purple;
+        color: var(--color4);
       }
       .cell.adj-5 {
-        color: grey;
+        color: var(--color5);
       }
 
       .modal {
@@ -172,6 +178,17 @@ p {
     <div class="page">
         <mini-game cols="13" rows="9" items="12" steps="14"></mini-game>
         <p>Mini Game by <a href="https://tommykrueger.com">tommykrueger.com</a></p>
+
+        <style>
+            mini-game {
+              --color1: green;
+              --color2: yellow;
+              --color3: orange;
+              --color4: red;
+              --color5: purple;
+            }
+        </style>
+
     </div>
 </body>
 </html>
