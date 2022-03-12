@@ -1,5 +1,9 @@
 # mini-game web component
 
+This repo provides a simple web component of a Minesweeper-like mini-game. 
+The web component uses native javascript code which runs inside the browser
+without any third party frameworks or libraries.
+
 ### Usage
 
 ``` html
