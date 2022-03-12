@@ -1,4 +1,4 @@
-# <mini-game> web component
+# mini-game web component
 
 ### Usage
 
@@ -6,7 +6,7 @@
 <!-- import the web component as JavaScript ES module -->
 <script type="module" src="./MiniGame.js"></script>
 
-<!-- web component using default built in attributes -->
+<!-- web component using built in attributes -->
 <mini-game></mini-game>
 
 <!-- web component with custom attributes -->
@@ -26,7 +26,7 @@ css properties.
 
 #### Colors:
 
-``` css
+``` html
 <style>
     mini-game {
       --color1: green;
