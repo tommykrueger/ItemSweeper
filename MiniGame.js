@@ -44,7 +44,7 @@ export default class MiniGame extends HTMLElement {
             return;
         }
         this.attr[name] = newValue;
-        // console.log(name, oldValue, newValue);
+        this.startGame();
     }
 
     /**
@@ -52,6 +52,13 @@ export default class MiniGame extends HTMLElement {
      */
     connectedCallback() {
         this.startGame();
+    }
+
+    /**
+     * This function is called when the component is removed from the DOM
+     */
+    disconnectedCallback() {
+        // todo remove all listeners ?
     }
 
     startGame() {
@@ -91,7 +98,6 @@ export default class MiniGame extends HTMLElement {
 
                 cell.setAttribute('data-xpos', c);
                 cell.setAttribute('data-ypos', r);
-                // cell.innerHTML = cellObj.value;
 
                 this.body.appendChild(cell);
                 this.addClickHandler(cell);
@@ -101,12 +107,6 @@ export default class MiniGame extends HTMLElement {
         this.availableSteps = parseInt(this.attr.steps);
     }
 
-    /**
-     * This function is called when the component is removed from the DOM
-     */
-    disconnectedCallback() {
-        // this.reset();
-    }
 
     initGridCells() {
         for (let r=0; r<this.attr.rows; r++) {
@@ -117,12 +117,12 @@ export default class MiniGame extends HTMLElement {
         }
     }
     placeItems() {
-        let nrow, ncol, row, col;
+        let newRow, newCol;
         while (this.itemsAssigned < this.attr.items) {
-            nrow = Math.floor(Math.random() * this.attr.rows);
-            ncol = Math.floor(Math.random() * this.attr.cols);
+            newRow = Math.floor(Math.random() * this.attr.rows);
+            newCol = Math.floor(Math.random() * this.attr.cols);
 
-            let cell = this.grid[nrow][ncol];
+            let cell = this.grid[newRow][newCol];
 
             if (!cell.isItem) {
                 cell.isItem = true;
@@ -172,14 +172,13 @@ export default class MiniGame extends HTMLElement {
             const cellElement = cell.getElement(this.body);
 
             cell.isRevealed = true;
-            cellElement.classList.add("revealed", `adj-${cell.value}`);
-            cellElement.textContent = (cell.value != 0) ? cell.value : '';
+            cellElement.classList.add('revealed', `adj-${cell.value}`);
+            cellElement.textContent = (cell.value !== 0) ? cell.value : '';
 
             if (cell.isItem) {
                 this.itemsFound++;
                 this.checkGameOver();
             } else if (cell.value === 0) {
-                //if the clicked cell has 0 adjacent mines, we need to recurse to clear out all adjacent 0 cells
                 const adjCells = this.getAdjacentCells(cell.ypos, cell.xpos);
                 for (let i=0, len=adjCells.length; i<len; i++) {
                     this.revealCell(adjCells[i]);
@@ -192,8 +191,6 @@ export default class MiniGame extends HTMLElement {
         this.shadowRoot.querySelector('.items-found').innerHTML = `Items found: ${this.itemsFound}/${this.attr.items}`;
         this.shadowRoot.querySelector('.steps-available').innerHTML = `Steps: ${this.availableSteps}`;
     }
-
-
 
     addClickHandler(cell) {
         cell.addEventListener("click", (e) => {
@@ -241,7 +238,7 @@ export default class MiniGame extends HTMLElement {
         this.modalSlot.style.display = 'flex';
 
         this.modalSlot.querySelector('#restart-btn').addEventListener('click', () => {
-           this.startGame();
+            this.startGame();
             this.modalSlot.style.display = 'none';
         });
     }
@@ -251,4 +248,5 @@ export default class MiniGame extends HTMLElement {
     }
 }
 
+// register the <mini-game> html tag to the browser
 customElements.define("mini-game", MiniGame);

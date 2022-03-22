@@ -21,5 +21,4 @@ export default class Cell {
             `.cell[data-xpos="${this.xpos}"][data-ypos="${this.ypos}"]`
         );
     }
-
 }

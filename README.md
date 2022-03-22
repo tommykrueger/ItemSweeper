@@ -48,3 +48,8 @@ css properties.
 
 ### Image credit
  public licence images from pixabay.com
+ 
+<!--
+
+Custom Attributes
+time: Number of seconds the player has to solve the game.
