@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Minigame Web Component</title>
-    <script type="module" src="./MiniGame.js"></script>
+    <title>ItemSweeper Online Game</title>
+    <script type="module" src="./ItemSweeper.js"></script>
 </head>
 <style>
 * {
@@ -32,7 +32,7 @@ body {
   border: 1px solid #f0f0f0;
   background-color: white;
 }
-mini-game {
+item-sweeper {
   display: flex;
   justify-content: center;
 }
@@ -51,7 +51,7 @@ p {
 </style>
 
 
-<template id="mini-game-template">
+<template id="item-sweeper-template">
     <style>
       :host {
         --cell-size: 48px;
@@ -183,7 +183,7 @@ p {
 
 <body>
     <div class="page">
-        <mini-game cols="13" rows="9" items="12" steps="14"></mini-game>
+        <item-sweeper cols="13" rows="9" items="12" steps="14"></item-sweeper>
 
         <main class="main-content">
             <h3>How to play</h3>
@@ -192,19 +192,19 @@ p {
             <p>There is a number of items that you have to find and a number of steps that you have available.
                 If you run out of steps the game is over.
             </p>
-            <p>If you click on a square with an item in it it will be collected to your item inventory</p>
+            <p>If you click on a square with an item in it will be collected to your item inventory</p>
             <p>Try to find all items by analysing the numbers. If you manage to find all - you win.</p>
             <p>
                 The numbers show how many items are adjacent to that square.
                 For example if you reveal a square and the number 3 appears it means there are 3 items neighboring that square.
             </p>
             <br><br>
-            <p>Mini Game by <a href="https://tommykrueger.com">tommykrueger.com</a></p>
+            <p>ItemSweeper by <a href="https://tommykrueger.com">tommykrueger.com</a></p>
         </main>
 
 
         <style>
-            mini-game {
+            item-sweeper {
               --color1: green;
               --color2: yellow;
               --color3: orange;

@@ -1,4 +1,4 @@
-# mini-game web component
+# ItemSweeper: A Minesweeper like mini-game built as Web Component
 
 This repo provides a simple web component of a Minesweeper-like mini-game. 
 The web component uses native javascript code which runs inside the browser
@@ -8,13 +8,13 @@ without any third party frameworks or libraries.
 
 ``` html
 <!-- import the web component as JavaScript ES module -->
-<script type="module" src="./MiniGame.js"></script>
+<script type="module" src="./ItemSweeper.js"></script>
 
 <!-- web component using built in attributes -->
-<mini-game></mini-game>
+<item-sweeper></item-sweeper>
 
 <!-- web component with custom attributes -->
-<mini-game cols="7" rows="11" items="8" steps="12"></mini-game>
+<item-sweeper cols="7" rows="11" items="8" steps="12"></item-sweeper>
 ```
 
 ### Custom Attributes
@@ -32,7 +32,7 @@ css properties.
 
 ``` html
 <style>
-    mini-game {
+    item-sweeper {
       --color1: green;
       --color2: yellow;
       --color3: orange;
