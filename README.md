@@ -43,7 +43,7 @@ css properties.
 ```
 
 ### Working Example
-...
+=> https://tommykrueger.com/projects/ItemSweeper/index.html
 
 
 ### Image credit
